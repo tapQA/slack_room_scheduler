@@ -5,6 +5,7 @@ var gulp = require('gulp'),
     gutil = require('gulp-util');
 
 gulp.task('test', function () {
+    process.env.NODE_ENV = 'development';
     return gulp.src(['app/tests/**/*.js'], { read: false })
         .pipe(mocha({
             reporter: 'spec',

@@ -19,7 +19,9 @@
 
     "predef"        : [
         "describe",
-        "it"
+        "it",
+        "beforeEach",
+        "afterEach"
     ],
 
 
