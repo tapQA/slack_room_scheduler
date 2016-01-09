@@ -1,0 +1,29 @@
+{
+  "name": "slack_room_scheduler",
+  "version": "1.0.0",
+  "description": "Schedule rooms via slack",
+  "main": "server.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "author": "Evan Duncan",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "morgan": "^1.6.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-nodemon": "^2.0.6",
+    "gulp-util": "^3.0.7",
+    "jshint": "^2.8.0",
+    "jshint-stylish": "^2.1.0",
+    "mocha": "^2.3.4",
+    "nodemon": "^1.8.1",
+    "require-dir": "^0.3.0",
+    "should": "^8.0.2"
+  }
+}
