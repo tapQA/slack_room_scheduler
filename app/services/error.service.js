@@ -8,6 +8,10 @@ var _ = require('lodash');
  * @returns {Array[Object]}
  */
 exports.createError = function (errors) {
+    if (!errors) {
+        return;
+    }
+
     var errObject = { errors: [ ] };
 
     if (errors instanceof Array) {

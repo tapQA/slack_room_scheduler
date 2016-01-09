@@ -47,5 +47,9 @@ describe('Error Service', function () {
             results = errorService.createError(arrayParam);
             results.errors.length.should.equal(errCnt);
         });
+
+        it('should return undefined if no errors params are provided', function () {
+            (!errorService.createError()).should.be.true();
+        });
     });
 });
