@@ -32,5 +32,8 @@ module.exports = function (db) {
         next();
 	});
 
+    // Routes
+    app.use('/api', require(__dirname + '/routes'));
+
     return app;
 };
