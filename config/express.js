@@ -14,8 +14,6 @@ module.exports = function (db) {
 
     app.set('showStackError', true);
 
-    app.use(express.static('../../public'));
-
     // Setup logging middleware
     if (process.env.NODE_ENV !== 'production') {
         app.use(morgan('dev'));
