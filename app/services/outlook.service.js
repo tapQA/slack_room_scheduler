@@ -43,7 +43,7 @@ function stripResponseWrapper(data) {
  */
 function getRequestObject(opts) {
     if (!opts || !(opts instanceof Object)) {
-        return {};
+        return DEFAULT_REQUEST_OPTIONS;
     }
 
     return _.merge(DEFAULT_REQUEST_OPTIONS, opts);

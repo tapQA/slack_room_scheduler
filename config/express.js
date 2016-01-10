@@ -25,12 +25,12 @@ module.exports = function (db) {
 
     // Respond with a 400 if a request isn't to the api
     // All routes have to start with '/api'
-	app.use(function(req, res, next) {
+    app.use(function(req, res, next) {
         if (!(/\/api\//.test(req.url))) {
             res.status(400).json(errorService.createError('Bad Request'));
         }
         next();
-	});
+    });
 
     // Routes
     app.use('/api', require(__dirname + '/routes'));
