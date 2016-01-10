@@ -12,8 +12,10 @@ var _ = require('lodash'),
  * Locals
  */
 var outlookApiURI = config.outlookApiURI;
-var DEFAULT_REQUEST_HEADERS = {
-    Prefer: 'outlook.timezone="Central Standard Time"'
+var DEFAULT_REQUEST_OPTIONS = {
+    headers: {
+        Prefer: 'outlook.timezone="Central Standard Time"'
+    }
 };
 
 /**
@@ -36,31 +38,35 @@ function stripResponseWrapper(data) {
 
 /**
  * Helper to return request object
- * @param {Object} opts - Input options to extend with defaults
+ * @param {Object} opts - Input options to extend with DEFAULT_REQUEST_OPTIONSts
  * @returns {Object}
  */
 function getRequestObject(opts) {
     if (!opts || !(opts instanceof Object)) {
         return {};
     }
-    
-    return _.extend(DEFAULT_REQUEST_HEADERS, opts);
+
+    return _.merge(DEFAULT_REQUEST_OPTIONS, opts);
 }
 
+/******************************************************************************
+ * Calendars
+ *****************************************************************************/
+
 /**
- * Get the oulook calendars for the given use
+ * Get the oulook calendars for the given user
  * @param cb {Function} - callback function
  * @returns {Array[Object]}
  */
 exports.getCalendarsAsync = function (cb) {
     var options = getRequestObject({
-        uri: outlookApiURI + '/' + config.outlookUserName + '/calendars'
+        uri: outlookApiURI + '/me/calendars'
     });
 
     return request(options, function (err, res, data) {
         var errRes = err;
         if (res.statusCode !== 200) {
-            errRes = 'No calendars found for ' + config.outlookUserName;
+            errRes = 'No calendars found';
             data = {}; // send some data to the stripResponseWrapper func
         }
 
@@ -70,7 +76,6 @@ exports.getCalendarsAsync = function (cb) {
 
 /**
  * Get a calendar by id
- * @param {String} id
  * @param {Function} cb - callback function
  * @returns {Object}
  */
@@ -80,7 +85,7 @@ exports.getCalendarAsync = function (id, cb) {
     }
 
     var options = getRequestObject({
-        uri: outlookApiURI + '/' + config.outlookUserName + '/calendars' + '/' + id
+        uri: outlookApiURI + '/me/calendars' + '/' + id
     });
 
     return request(options, function (err, res, data) {
@@ -98,5 +103,36 @@ exports.getCalendarAsync = function (id, cb) {
         }
 
         return cb(errorService.createError(errRes), data);
+    });
+};
+
+/******************************************************************************
+ * Events
+ *****************************************************************************/
+
+/**
+ * Get calendar events within a datetime range
+ * @param {String} startDateTime
+ * @param {String} endDateTime
+ * @param {Function} cb - callback function
+ * @returns {Array[Object]}
+ */
+exports.getEventsAsync = function (startDateTime, endDateTime, cb) {
+    var options = getRequestObject({
+        uri: outlookApiURI + '/me/calendarview',
+        qs: {
+            startdatetime: new Date(startDateTime).toISOString(),
+            enddatetime: new Date(endDateTime).toISOString()
+        }
+    });
+
+    return request(options, function (err, res, data) {
+        var errRes = err;
+        if (res.statusCode !== 200) {
+            errRes = 'No events found';
+            data = {}; // send some data to the stripResponseWrapper func
+        }
+
+        return cb(errorService.createError(errRes), stripResponseWrapper(data));
     });
 };
