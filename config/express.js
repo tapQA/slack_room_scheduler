@@ -7,7 +7,8 @@ var express = require('express'),
     morgan = require('morgan'),
     helmet = require('helmet'),
     errorService = require('../app/services/error.service'),
-    path = require('path');
+    path = require('path'),
+    bodyParser = require('body-parser');
 
 module.exports = function (db) {
     var app = express();
@@ -23,6 +24,10 @@ module.exports = function (db) {
 
     // Use helmet to help secure the API
     app.use(helmet());
+
+    // Use body-parser to get the req body
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
 
     // Routes
     app.use('/api', require(__dirname + '/routes'));
