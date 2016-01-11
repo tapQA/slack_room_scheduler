@@ -3,6 +3,7 @@
 var errorService = require('../services/error.service'),
     outlookService = require('../services/outlook.service'),
     config = require('../../config/config'),
+    SlackResponse = require(__dirname + '/slack.response.object'),
     _ = require('lodash');
 
 /**
@@ -14,18 +15,6 @@ function isValid(token) {
 }
 
 /**
- * Helper to get error text
- * @private
- */
-function getError(reqBody) {
-    if (!reqBody) {
-        return errorService.createError('No Request Body');
-    } else if (!isValid(reqBody.token)) {
-        return errorService.createError('Invalid Request Token');
-    }
-}
-
-/**
  * @constructor SlackDelegator
  * @type SlackDelegator
  * @typedef {SlackDelegator} object used to parse and delegate resource fetching
@@ -33,19 +22,53 @@ function getError(reqBody) {
  * @returns {SlackDelegator}
  */
 function SlackDelegator(reqBody) {
-    _.extend(this, getError(reqBody));
-    
-    if (!this.hasError()) {
-        _.extend(this, reqBody);
-    }
+    _.merge(this, reqBody);
 }
 
 SlackDelegator.prototype = {
-    hasError: function () {
-        return !!this.errors;
+    /**
+     * Get the error object
+     * @returns {Object}
+     */
+    getError: function () {
+        if (!_.keys(this).length) {
+            return errorService.createError('No Request Body');
+        } else if (!isValid(this.token)) {
+            return errorService.createError('Invalid Request Token');
+        }
     },
-    getResponseObject: function () {
 
+    /**
+     * Check to see is the delegator has an error
+     * @returns {Boolean}
+     */
+    hasError: function () {
+        return !!this.getError();
+    },
+
+    /**
+     * Get the formatted slack response
+     * @param {Object} data
+     * @returns {Object}
+     */
+    getResponseObject: function (data) {
+        return new SlackResponse(data);
+    },
+
+    /**
+     * Get the status of the room
+     * @returns {Object}
+     */
+    getRoomStatus: function () {
+        // Do something to result in {is_available: Bool}
+    },
+
+    /**
+     * Schedule the selected room
+     * @returns {Object}
+     */
+    scheduleRoom: function () {
+        // Return a success or failure object
     }
 };
 

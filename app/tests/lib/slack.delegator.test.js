@@ -4,7 +4,7 @@ var SlackDelegator = require('../../lib/slack.delegator'),
     config = require('../../../config/config'),
     delegator;
 
-describe('Slack Delegator Object', function () {
+describe.only('Slack Delegator', function () {
     describe('prototype', function () {
         it('should have a hasError function', function () {
             SlackDelegator.prototype.should.have.property('hasError')
@@ -15,6 +15,16 @@ describe('Slack Delegator Object', function () {
             SlackDelegator.prototype.should.have.property('getResponseObject')
                 .and.is.instanceOf(Function);
         });
+
+        it('should have a getRoomStatus function', function () {
+            SlackDelegator.prototype.should.have.property('getRoomStatus')
+                .and.is.instanceOf(Function);
+        });
+
+        it('should have a scheduleRoom function', function () {
+            SlackDelegator.prototype.should.have.property('scheduleRoom')
+                .and.is.instanceOf(Function);
+        })
     });
 
     describe('#hasError()', function () {
@@ -26,8 +36,8 @@ describe('Slack Delegator Object', function () {
             delegator.hasError().should.be.instanceOf(Boolean);
         });
 
-        it('should return false if there isn\'t and error', function () {
-            delegator = new SlackDelegator({});
+        it('should return false if there isn\'t an error', function () {
+            delegator = new SlackDelegator({foo: 'bar'});
             delegator.hasError().should.be.false();
         });
 
