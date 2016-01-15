@@ -29,6 +29,7 @@
     "debug"         : false,  // Allow debugger statements e.g. browser breakpoints.
     "devel"         : true,   // Allow developments statements e.g. `console.log();`.
 
+    "esversion"     : 6,
 
     // ECMAScript 5.
     "strict"        : true,  // Require `use strict` pragma  in every file.

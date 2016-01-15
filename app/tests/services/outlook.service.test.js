@@ -164,9 +164,10 @@ describe('Outlook Service', function () {
     });
 
     describe('#getCalendarAsync()', function () {
+        const reqId = 'AAMkAGI2TGuLAAA=';
         beforeEach(function () {
             req = nock(config.outlookApiURI)
-                .get('/me/calendars/AAMkAGI2TGuLAAA=');
+                .get('/me/calendars/' + reqId);
         });
 
         it('should throw an error if an id isn\'t provided', function () {
@@ -182,7 +183,7 @@ describe('Outlook Service', function () {
         it('should return a calendar object', function () {
             req.reply(200, mockCalenderObject);
 
-            return outlookService.getCalendarAsync('AAMkAGI2TGuLAAA=', function (err, calendar) {
+            return outlookService.getCalendarAsync(reqId, function (err, calendar) {
                 (!err).should.be.true();
                 calendar.should.be.instanceOf(Object);
                 calendar.should.have.property('@odata.context');
@@ -196,10 +197,20 @@ describe('Outlook Service', function () {
         it('should return an error object if the response is 404', function () {
             req.reply(404);
 
-            return outlookService.getCalendarAsync('AAMkAGI2TGuLAAA=', function (err, calendar) {
+            return outlookService.getCalendarAsync(reqId, function (err, calendar) {
                 (!calendar).should.be.true();
                 err.should.be.instanceOf(Object).and.have.property('errors');
-                err.errors[0].message.should.equal('No calendar found with id: AAMkAGI2TGuLAAA=');
+                err.errors[0].message.should.equal('No calendar found with id: ' + reqId);
+            });
+        });
+
+        it('should return an empty object if the response is invalid JSON', () => {
+            req.reply(200, '<div> some invalid json </div>');
+
+            return outlookService.getCalendarAsync(reqId, (err, calendar) => {
+                (!err).should.be.true();
+                calendar.should.be.instanceOf(Object);
+                (JSON.stringify(calendar)).should.equal('{}');
             });
         });
     });

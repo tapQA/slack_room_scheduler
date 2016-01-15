@@ -1,77 +1,65 @@
 'use strict';
 
-var _ = require('lodash'),
-    SlackResponse = require('../../lib/slack.response.object'),
-    testObject;
+const SlackResponse = require('../../lib/slack.response.object');
+let ro;
 
-describe('SlackResponse Object', function () {
-    beforeEach(function () {
-        testObject = new SlackResponse();
-    });
+describe('SlackResponse class', () => {
+	beforeEach(() => {
 
-    it('should be an object', function () {
-        testObject.should.be.instanceOf(Object);
-    });
+		ro = new SlackResponse();
+	});
 
-    it('should have default properties if no additional properties are provided', function () {
-        testObject.should.have.property('response_type').and.equal('ephemeral');
-    });
+	it('should implement DEFAULT_PROPERTIES getter', () => {
+		try {
+			SlackResponse.DEFAULT_PROPERTIES.should.be.any.instanceOf(Object);
+		} catch (err) {
+			(!!err).should.be.false();
+		}
+	});
 
-    it('should extend the default properties if additional properties are provided', function () {
-        testObject = new SlackResponse({ yo: 'dawg' });
-        testObject.should.have.property('yo').and.equal('dawg');
-    });
+	it('should implement DEFAULT_PROPERTIES setter', () => {
+		try {
+			SlackResponse.DEFAULT_PROPERTIES = { foo: 'bar' };
+		} catch (err) {
+			(!!err).should.be.false();
+		}
 
-    describe('SlackResponse.protoype', function () {
-        it('should expose a getResponseObject function', function () {
-            SlackResponse.prototype.should.have.property('getResponseObject')
-                .and.is.instanceOf(Function);
-        });
+		SlackResponse.DEFAULT_PROPERTIES = {};
+	});
 
-        it('should expose a DEFAULT_PROPERTIES object', function () {
-            SlackResponse.prototype.should.have.property('DEFAULT_PROPERTIES')
-                .and.is.instanceOf(Object);
-        });
+	it('should have a toString method', () => {
+		ro = new SlackResponse();
+		ro.should.have.property('toString')
+			.and.is.instanceOf(Function);
 
-        it('should expose a setDefaultProperties function', function () {
-            SlackResponse.prototype.should.have.property('setDefaultProperties')
-                .and.is.instanceOf(Function);
-        });
+		ro.toString().should.equal('{"response_type":"ephemeral","foo":"bar"}');
+	});
 
-        describe('#getResponseObject()', function () {
-            it('should return an object', function () {
-                testObject.getResponseObject().should.be.instanceOf(Object);
-            });
+	it('should extend the DEFAULT_PROPERTIES onto the response object', () => {
+		SlackResponse.DEFAULT_PROPERTIES = { foo: 'bar' };
+		ro = new SlackResponse({ callback: function () {} });
 
-            it('should return default values if a data object isn\'t provided', function () {
-                (_.isEqual(testObject.getResponseObject(), testObject.DEFAULT_PROPERTIES))
-                    .should.be.true();
-            });
+		ro.should.have.property('foo').and.equal('bar');
+		ro.should.have.property('callback').and.is.instanceOf(Function);
+	});
 
-            it('should extend the optional data object onto the response', function () {
-                testObject.getResponseObject({ foo: 'bar' })
-                    .should.have.property('foo')
-                    .and.equal('bar');
-            });
+	describe('DEFAULT_PROPERTIES setter', () => {
+		it('should extend the already existing defaults', () => {
+			SlackResponse.DEFAULT_PROPERTIES = { foo: 'bar', callback: function () {} };
+			SlackResponse.DEFAULT_PROPERTIES.should.have.property('foo');
+			SlackResponse.DEFAULT_PROPERTIES.should.have.property('callback');
 
-            it('should not alter the DEFAULT_PROPERTIES objects', function () {
-                testObject.getResponseObject({ foo: 'bar' });
-                testObject.DEFAULT_PROPERTIES.should.not.have.property('foo');
-            });
-        });
+			SlackResponse.DEFAULT_PROPERTIES = { bat: 'baz' };
+			SlackResponse.DEFAULT_PROPERTIES.should.have.property('foo');
+			SlackResponse.DEFAULT_PROPERTIES.should.have.property('callback');
+			SlackResponse.DEFAULT_PROPERTIES.should.have.property('bat');
+		});
 
-        describe('#setDefaultProperties()', function () {
-            it('should extend the provided object onto the DEFAULT_PROPERTIES', function () {
-                testObject.setDefaultProperties({ foo: 'bar' });
-                testObject.DEFAULT_PROPERTIES.should.have.property('foo')
-                    .and.equal('bar');
-            });
-
-            it('should extend the key/value pair onto the DEFAULT_PROPERTIES', function () {
-                testObject.setDefaultProperties('test', 'value');
-                testObject.DEFAULT_PROPERTIES.should.have.property('test')
-                    .and.equal('value');
-            });
-        });
-    });
+		it('should override properties', () => {
+			SlackResponse.DEFAULT_PROPERTIES = { foo: 'bar' };
+			SlackResponse.DEFAULT_PROPERTIES.should.have.property('foo').and.equal('bar');
+			SlackResponse.DEFAULT_PROPERTIES = { foo: 'baz' };
+			SlackResponse.DEFAULT_PROPERTIES.should.have.property('foo').and.equal('baz');
+		});
+	});
 });
