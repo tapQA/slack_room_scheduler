@@ -3,7 +3,7 @@
 /**
  * Dependencies
  */
-var _ = require('lodash'),
+const _ = require('lodash'),
     config = require('../../config/config'),
     request = require('request'),
     errorService = require(__dirname + '/error.service');
@@ -11,12 +11,8 @@ var _ = require('lodash'),
 /**
  * Locals
  */
-var outlookApiURI = config.outlookApiURI;
-var DEFAULT_REQUEST_OPTIONS = {
-    headers: {
-        Prefer: 'outlook.timezone="Central Standard Time"'
-    }
-};
+const outlookApiURI = config.outlookApiURI;
+const DEFAULT_REQUEST_OPTIONS = require('../../config/properties/outlook.request.properties');
 
 /**
  * Helper to strip the response wrapper from the outlook service
@@ -65,7 +61,7 @@ exports.getCalendarsAsync = function (cb) {
 
     return request(options, function (err, res, data) {
         var errRes = err;
-        if (res.statusCode !== 200) {
+        if (!res || res.statusCode !== 200) {
             errRes = 'No calendars found';
             data = {}; // send some data to the stripResponseWrapper func
         }
@@ -90,7 +86,7 @@ exports.getCalendarAsync = function (id, cb) {
 
     return request(options, function (err, res, data) {
         var errRes = err;
-        if (res.statusCode !== 200) {
+        if (!res || res.statusCode !== 200) {
             errRes = 'No calendar found with id: ' + id;
         }
 
@@ -128,7 +124,7 @@ exports.getEventsAsync = function (startDateTime, endDateTime, cb) {
 
     return request(options, function (err, res, data) {
         var errRes = err;
-        if (res.statusCode !== 200) {
+        if (!res || res.statusCode !== 200) {
             errRes = 'No events found';
             data = {}; // send some data to the stripResponseWrapper func
         }

@@ -1,8 +1,9 @@
 'use strict';
 
-const errorService = require('../services/error.service');
-const config = require('../../config/config');
-const SlackResponse = require(__dirname + '/slack.response.object');
+const errorService = require('../services/error.service'),
+	config = require('../../config/config'),
+	SlackResponse = require(__dirname + '/slack.response.object'),
+	OutlookService = require('../services/outlook.service');
 
 class SlackDelegator {
 	constructor(reqBody) {
@@ -29,8 +30,25 @@ class SlackDelegator {
 		}
 	}
 
-	get roomStatus() {
-		return { is_available: true };
+	/**
+	 * Aysynchronously get the status of a conference room
+	 * @param  {String}   [start] Start date as a string
+	 * @param  {String}   [end]   End data as a string
+	 * @param  {Function} cb    Call back function
+	 * @return {Object}
+	 */
+	roomStatus(start, end, cb) {
+		// If no date range is provided
+		// then make a request using the current time
+		if (start instanceof Function) {
+			cb = start;
+			start = end = new Date();
+		}
+
+		return OutlookService.getEventsAsync(start, end, (err, events) => {
+			const availability = { is_available: (!err && (events && !events.length)) ? true : false };
+			return cb(availability);
+		});
 	}
 
 	get responseObject() {
