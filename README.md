@@ -1,5 +1,7 @@
 Integrate the outlook and slack API to allow users to schedule rooms with slash commands
 
+[![Build Status](https://travis-ci.org/tapQA/slack_room_scheduler.svg?branch=develop)](https://travis-ci.org/tapQA/slack_room_scheduler)
+
 
 License
 =======
