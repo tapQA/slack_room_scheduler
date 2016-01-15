@@ -31,7 +31,6 @@ gulp.task('pre-test', function () {
 });
 
 gulp.task('test:coverage', ['pre-test'], function () {
-    process.env.NODE_ENV = 'development';
     return gulp.src(tests)
         .pipe(mocha({
             globals: {
