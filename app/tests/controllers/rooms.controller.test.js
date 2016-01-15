@@ -1,6 +1,7 @@
 'use strict';
 
-var roomsController = require('../../controllers/rooms.controller');
+const roomsController = require('../../controllers/rooms.controller'),
+    sinon = require('sinon')
 
 describe('Rooms Controller',() => {
     describe('initialization',() => {
@@ -17,6 +18,28 @@ describe('Rooms Controller',() => {
         it('should have a getStatus function',() => {
             roomsController.should.have.property('getStatus')
                 .and.is.instanceOf(Function);
+        });
+    });
+
+    describe('#list()',() => {
+        it('should call res.json', () => {
+            const req = sinon.stub();
+            const res = sinon.stub({ json: function () {} });
+            res.json.returns({});
+            roomsController.list(req, res);
+            (res.json.called).should.be.true();
+        });
+    });
+
+    describe('#read()', () => {
+        it('should do something...', () => {
+            roomsController.read();
+        });
+    });
+
+    describe('#getStatus', () => {
+        it('should do something...', () => {
+            roomsController.getStatus();
         });
     });
 });

@@ -107,6 +107,15 @@ describe('Slack Delegator', () => {
                 done();
             });
         });
+
+        it('should get events as of provided dates', (done) => {
+            req.reply(200, {'value': []});
+
+            return delegator.roomStatus(new Date(), new Date(), (status) => {
+                status.is_available.should.be.true();
+                done();
+            });
+        });
     });
 
     describe('responseObject getter', () => {
@@ -129,6 +138,8 @@ describe('Slack Delegator', () => {
     });
 
     describe('#scheduleRoom()', () => {
-        
+        it('should do something', () => {
+            (!!delegator.scheduleRoom()).should.be.false();
+        });
     });
 });

@@ -19,10 +19,6 @@ const DEFAULT_REQUEST_OPTIONS = require('../../config/properties/outlook.request
  * @returns {Object}
  */
 function stripResponseWrapper(data) {
-    if (!data) {
-        throw new Error('Data is required');
-    }
-
     try {
         data = JSON.parse(data);
     } catch (err) {
@@ -34,15 +30,11 @@ function stripResponseWrapper(data) {
 
 /**
  * Helper to return request object
- * @param {Object} opts - Input options to extend with DEFAULT_REQUEST_OPTIONSts
+ * @param {Object} opts - Input options to extend with DEFAULT_REQUEST_OPTIONS
  * @returns {Object}
  */
 function getRequestObject(opts) {
-    if (!opts || !(opts instanceof Object)) {
-        return DEFAULT_REQUEST_OPTIONS;
-    }
-
-    return _.merge(DEFAULT_REQUEST_OPTIONS, opts);
+    return _.merge({}, opts, DEFAULT_REQUEST_OPTIONS);
 }
 
 /******************************************************************************
