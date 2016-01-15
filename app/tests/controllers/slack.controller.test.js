@@ -2,8 +2,8 @@
 
 var slackController = require('../../controllers/slack.controller');
 
-describe('Slack controller', function () {
-    it('should have a delegate function', function () {
+describe('Slack controller',() => {
+    it('should have a delegate function',() => {
         slackController.should.have.property('delegate')
             .and.is.instanceOf(Function);
     });

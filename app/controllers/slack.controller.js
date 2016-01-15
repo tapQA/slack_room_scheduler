@@ -1,7 +1,8 @@
 'use strict';
 
-var SlackDelegator = require('../lib/slack.delegator');
+const SlackDelegator = require('../lib/slack.delegator');
 
 exports.delegate = function (req, res) {
-    res.json(new SlackDelegator(req.body));
+	let delegator = new SlackDelegator(req.body);
+	res.json(delegator.responseObject);
 };
